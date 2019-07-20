@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+    .pb-2.mt-2.mb-4.border-bottom
+        h3 #{title} #{email}
+        #servicebot-billing-embed
+        script.
+            window.servicebotSettings = {
+                servicebot_id: "Zsl0kaHKNxQq",
+                service: "Example Simple",
+                email: "#{email}",
+                options: {}
+            };
+            (function () {
+                var s = document.createElement('script');
+                s.src = 'https://js.servicebot.io/embeds/servicebot-billing-settings-embed.js';
+                s.async = true;
+                s.type = 'text/javascript';
+                var x = document.getElementsByTagName('script')[0];
+                x.parentNode.insertBefore(s, x);
+            })();
