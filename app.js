@@ -34,11 +34,13 @@ const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
-
+const stripeWebhook = require("./controllers/stripe");
 /**
  * API keys and Passport configuration.
  */
 const passportConfig = require('./config/passport');
+
+
 
 /**
  * Create Express server.
@@ -89,7 +91,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/api/upload') {
+  if (req.path === '/api/upload' || req.path === "/activate" || req.path === "/webhooks/stripe") {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -136,6 +138,8 @@ app.get('/reset/:token', userController.getReset);
 app.post('/reset/:token', userController.postReset);
 app.get('/signup', userController.getSignup);
 app.post('/signup', userController.postSignup);
+app.post('/activate', passportConfig.isAuthenticated, userController.activate);
+
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
 app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
@@ -144,7 +148,7 @@ app.post('/account/profile', passportConfig.isAuthenticated, userController.post
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
-
+app.post("/webhooks/stripe", stripeWebhook);
 
 /**
  * API examples routes.

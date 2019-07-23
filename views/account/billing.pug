@@ -3,13 +3,30 @@ extends ../layout
 block content
     .pb-2.mt-2.mb-4.border-bottom
         h3 #{title} #{email}
-        #servicebot-billing-embed
+        #servicebot-subscription-portal
         script.
             window.servicebotSettings = {
                 servicebot_id: "Zsl0kaHKNxQq",
                 service: "SaaS Freemium 1",
                 email: "#{email}",
-                options: {}
+                options: {},
+                handleResponse: async function({event, response}){
+                    if(event === "create_subscription" || event === "resubscribe"){
+                        console.log("Activating account!", response);
+                        let activationResponse = await fetch("/activate", {
+                            method: "POST",
+                            credentials: "include",
+                            headers: {
+                                'Content-Type': 'application/json',
+                                // 'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: JSON.stringify({
+                                subscription_id: response.id
+                            })
+                        }).then(response => response.json());
+                        console.log("response from server - ", activationResponse);
+                    }
+                }
             };
             (function () {
                 var s = document.createElement('script');

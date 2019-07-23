@@ -14,9 +14,8 @@
   "scripts": {
     "postinstall": "npm rebuild node-sass",
     "start": "node app.js",
-    "test": "nyc mocha --timeout=10000 --exit",
-    "lint": "eslint \"**/*.js\""
-  },
+    "test": "nyc mocha --timeout=10000 --exit"
+    },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.9.0",
     "@ladjs/bootstrap-social": "^7.0.2",
